@@ -13,7 +13,7 @@
 // ============ CONFIGURATION ============
 const CONFIG = {
   // Replace with your Google Apps Script Web App URL
-  SHEET_API_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
+  SHEET_API_URL: 'https://script.google.com/macros/s/AKfycbxdQwZsWVVfWTRbgy16Lw66YQ9k0KB60i5eAjcztthYH9Lf1EkV35UkAw_w1dKOvCg/exec',
   
   // Work schedule settings
   WORK_START_HOUR: 8,    // 08:00
