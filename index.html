@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>ระบบเช็คเวลา WFH - กองทัพอากาศ</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <!-- face-api.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen active">
+      <div class="loading-content">
+        <div class="rtaf-logo">
+          <img src="assets/rtaf-logo.png" alt="RTAF Logo" onerror="this.style.display='none'">
+          <div class="logo-placeholder">✈</div>
+        </div>
+        <h1>กองทัพอากาศ</h1>
+        <h2>ระบบเช็คเวลา WFH</h2>
+        <div class="spinner"></div>
+        <p id="loading-text">กำลังโหลดระบบ...</p>
+      </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+      <div class="screen-header">
+        <div class="header-icon">✈</div>
+        <h2>เข้าสู่ระบบ</h2>
+        <p>ระบบเช็คเวลา WFH กองทัพอากาศ</p>
+      </div>
+      <div class="screen-body">
+        <div class="form-group">
+          <label>หมายเลขประจำตัว</label>
+          <input type="text" id="login-id" placeholder="กรอกหมายเลขประจำตัว" inputmode="numeric">
+        </div>
+        <div class="form-group">
+          <label>รหัสผ่าน</label>
+          <input type="password" id="login-password" placeholder="กรอกรหัสผ่าน">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="App.login()">
+          <span>เข้าสู่ระบบ</span>
+        </button>
+        <div class="divider"><span>หรือ</span></div>
+        <button class="btn btn-outline btn-full" onclick="App.showScreen('register-screen')">
+          <span>ลงทะเบียนใหม่</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="register-screen" class="screen">
+      <div class="screen-header">
+        <button class="btn-back" onclick="App.showScreen('login-screen')">&#8592;</button>
+        <h2>ลงทะเบียน</h2>
+        <p>ลงทะเบียนเจ้าหน้าที่ใหม่</p>
+      </div>
+      <div class="screen-body">
+        <div class="form-group">
+          <label>ยศ <span class="required">*</span></label>
+          <select id="reg-rank">
+            <option value="">-- เลือกยศ --</option>
+            <optgroup label="นายทหารสัญญาบัตร">
+              <option value="จอมพลอากาศ">จอมพลอากาศ</option>
+              <option value="พลอากาศเอก">พลอากาศเอก</option>
+              <option value="พลอากาศโท">พลอากาศโท</option>
+              <option value="พลอากาศตรี">พลอากาศตรี</option>
+              <option value="นาวาอากาศเอก">นาวาอากาศเอก</option>
+              <option value="นาวาอากาศโท">นาวาอากาศโท</option>
+              <option value="นาวาอากาศตรี">นาวาอากาศตรี</option>
+              <option value="เรืออากาศเอก">เรืออากาศเอก</option>
+              <option value="เรืออากาศโท">เรืออากาศโท</option>
+              <option value="เรืออากาศตรี">เรืออากาศตรี</option>
+            </optgroup>
+            <optgroup label="นายทหารประทวน">
+              <option value="พันจ่าอากาศเอก">พันจ่าอากาศเอก</option>
+              <option value="พันจ่าอากาศโท">พันจ่าอากาศโท</option>
+              <option value="พันจ่าอากาศตรี">พันจ่าอากาศตรี</option>
+              <option value="จ่าอากาศเอก">จ่าอากาศเอก</option>
+              <option value="จ่าอากาศโท">จ่าอากาศโท</option>
+              <option value="จ่าอากาศตรี">จ่าอากาศตรี</option>
+            </optgroup>
+            <optgroup label="พลทหาร/ข้าราชการพลเรือน">
+              <option value="พลอากาศ">พลอากาศ</option>
+              <option value="พนักงานราชการ">พนักงานราชการ</option>
+              <option value="ข้าราชการพลเรือน">ข้าราชการพลเรือน</option>
+              <option value="ลูกจ้าง">ลูกจ้าง</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ชื่อ <span class="required">*</span></label>
+            <input type="text" id="reg-firstname" placeholder="ชื่อ">
+          </div>
+          <div class="form-group">
+            <label>นามสกุล <span class="required">*</span></label>
+            <input type="text" id="reg-lastname" placeholder="นามสกุล">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>หมายเลขประจำตัว <span class="required">*</span></label>
+          <input type="text" id="reg-id" placeholder="หมายเลขประจำตัว" inputmode="numeric">
+        </div>
+        <div class="form-group">
+          <label>ตำแหน่ง <span class="required">*</span></label>
+          <input type="text" id="reg-position" placeholder="ตำแหน่ง">
+        </div>
+        <div class="form-group">
+          <label>สังกัด <span class="required">*</span></label>
+          <input type="text" id="reg-unit" placeholder="หน่วยงาน/สังกัด">
+        </div>
+        <div class="form-group">
+          <label>รหัสผ่าน <span class="required">*</span></label>
+          <input type="password" id="reg-password" placeholder="ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)">
+        </div>
+        <div class="form-group">
+          <label>ยืนยันรหัสผ่าน <span class="required">*</span></label>
+          <input type="password" id="reg-password2" placeholder="ยืนยันรหัสผ่าน">
+        </div>
+        <div class="face-register-section">
+          <label>ลงทะเบียนใบหน้า <span class="required">*</span></label>
+          <div class="face-capture-container">
+            <video id="reg-video" autoplay playsinline muted></video>
+            <canvas id="reg-canvas"></canvas>
+            <div id="reg-face-overlay" class="face-overlay"></div>
+            <div id="reg-face-status" class="face-status">กดปุ่มเปิดกล้องเพื่อลงทะเบียนใบหน้า</div>
+          </div>
+          <div class="face-controls">
+            <button class="btn btn-secondary" onclick="App.startFaceCapture('register')" id="reg-camera-btn">
+              📷 เปิดกล้อง
+            </button>
+            <button class="btn btn-success" onclick="App.captureFace('register')" id="reg-capture-btn" disabled>
+              ✓ บันทึกใบหน้า
+            </button>
+          </div>
+          <div id="reg-face-preview" class="face-preview hidden">
+            <img id="reg-face-img" alt="ใบหน้าที่บันทึก">
+            <span class="check-icon">✓</span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="App.register()">
+          <span>ลงทะเบียน</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen" class="screen">
+      <div class="dashboard-header">
+        <div class="user-info">
+          <div id="user-avatar" class="user-avatar">
+            <img id="user-face-img" alt="" onerror="this.style.display='none'">
+            <span id="user-initials">--</span>
+          </div>
+          <div class="user-details">
+            <div id="user-rank-name" class="user-rank-name">ยินดีต้อนรับ</div>
+            <div id="user-position" class="user-position">--</div>
+            <div id="user-unit" class="user-unit">--</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="App.logout()">ออกจากระบบ</button>
+      </div>
+
+      <div class="date-time-card">
+        <div id="current-date" class="current-date">--</div>
+        <div id="current-time" class="current-time">--:--:--</div>
+        <div id="current-location" class="current-location">
+          <span class="location-icon">📍</span>
+          <span id="location-text">กำลังระบุตำแหน่ง...</span>
+        </div>
+      </div>
+
+      <div id="today-status" class="today-status">
+        <div id="checkin-status" class="status-card status-pending">
+          <div class="status-icon">🕐</div>
+          <div class="status-info">
+            <div class="status-label">เวลาเข้างาน</div>
+            <div id="checkin-time" class="status-time">ยังไม่ได้เช็คอิน</div>
+          </div>
+        </div>
+        <div id="checkout-status" class="status-card status-pending">
+          <div class="status-icon">🕔</div>
+          <div class="status-info">
+            <div class="status-label">เวลาออกงาน</div>
+            <div id="checkout-time" class="status-time">ยังไม่ได้เช็คเอาท์</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-checkin btn-large" id="checkin-btn" onclick="App.showAttendanceScreen('checkin')">
+          <span class="btn-icon">⬇️</span>
+          <span class="btn-text">เช็คอิน</span>
+          <span class="btn-sub">บันทึกเวลาเข้างาน</span>
+        </button>
+        <button class="btn btn-checkout btn-large" id="checkout-btn" onclick="App.showAttendanceScreen('checkout')">
+          <span class="btn-icon">⬆️</span>
+          <span class="btn-text">เช็คเอาท์</span>
+          <span class="btn-sub">บันทึกเวลาออกงาน</span>
+        </button>
+      </div>
+
+      <div class="recent-records">
+        <h3>ประวัติการเช็คเวลา (7 วันล่าสุด)</h3>
+        <div id="records-list" class="records-list">
+          <div class="no-records">กำลังโหลดข้อมูล...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance (Face Verification) Screen -->
+    <div id="attendance-screen" class="screen">
+      <div class="screen-header">
+        <button class="btn-back" onclick="App.showScreen('dashboard-screen')">&#8592;</button>
+        <h2 id="attendance-title">เช็คอิน</h2>
+        <p id="attendance-subtitle">ยืนยันตัวตนด้วยใบหน้า</p>
+      </div>
+      <div class="screen-body">
+        <div class="face-verify-container">
+          <div class="face-capture-container">
+            <video id="attend-video" autoplay playsinline muted></video>
+            <canvas id="attend-canvas"></canvas>
+            <div id="attend-face-overlay" class="face-overlay"></div>
+            <div id="attend-face-status" class="face-status">กดปุ่มเปิดกล้องเพื่อยืนยันตัวตน</div>
+          </div>
+          <div class="face-controls">
+            <button class="btn btn-secondary" onclick="App.startFaceCapture('attend')" id="attend-camera-btn">
+              📷 เปิดกล้อง
+            </button>
+            <button class="btn btn-success" onclick="App.verifyAndRecord()" id="attend-capture-btn" disabled>
+              ✓ ยืนยันและบันทึก
+            </button>
+          </div>
+        </div>
+        <div class="location-info">
+          <div class="info-row">
+            <span class="info-label">📍 ตำแหน่งปัจจุบัน:</span>
+            <span id="attend-location">กำลังระบุตำแหน่ง...</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">🕐 เวลา:</span>
+            <span id="attend-time">--:--:--</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">📅 วันที่:</span>
+            <span id="attend-date">--</span>
+          </div>
+        </div>
+        <div id="verify-result" class="verify-result hidden">
+          <div id="verify-icon" class="verify-icon"></div>
+          <div id="verify-message" class="verify-message"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+      <div id="toast-message"></div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div id="modal" class="modal">
+        <div id="modal-title" class="modal-title"></div>
+        <div id="modal-body" class="modal-body"></div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="App.closeModal()">ตกลง</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
