@@ -1,0 +1,43 @@
+{
+  "name": "ระบบเช็คเวลา WFH - กองทัพอากาศ",
+  "short_name": "WFH RTAF",
+  "description": "ระบบบันทึกเวลาปฏิบัติงาน Work From Home กองทัพอากาศ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#001f5b",
+  "theme_color": "#003087",
+  "orientation": "portrait-primary",
+  "lang": "th",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "เช็คอิน",
+      "short_name": "Check-In",
+      "description": "บันทึกเวลาเข้างาน",
+      "url": "/?action=checkin",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "เช็คเอาท์",
+      "short_name": "Check-Out", 
+      "description": "บันทึกเวลาออกงาน",
+      "url": "/?action=checkout",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
